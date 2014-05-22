@@ -319,7 +319,7 @@ class Engine
             //$nchunks = max(2, min(8, (int)$nchunks));
             $nchunks = min(7, $xlim - $xoff, $ylim - $yoff) + 1;
             list($lcs, $seps)
-                = $this->_diag($xoff, $xlim, $yoff, $ylim, $nchunks);
+                = $this->diag($xoff, $xlim, $yoff, $ylim, $nchunks);
         }
 
         if ($lcs == 0) {
@@ -336,7 +336,7 @@ class Engine
             reset($seps);
             $pt1 = $seps[0];
             while ($pt2 = next($seps)) {
-                $this->_compareseq ($pt1[0], $pt2[0], $pt1[1], $pt2[1]);
+                $this->compareseq ($pt1[0], $pt2[0], $pt1[1], $pt2[1]);
                 $pt1 = $pt2;
             }
         }

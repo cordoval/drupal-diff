@@ -15,7 +15,7 @@ class DiffFormatter
     /**
      * Should a block header be shown?
      */
-    protected $show_header = TRUE;
+    protected $show_header = true;
 
     /**
      * Number of leading context "lines" to preserve.
@@ -42,7 +42,7 @@ class DiffFormatter
     public function format($diff)
     {
         $xi = $yi = 1;
-        $block = FALSE;
+        $block = false;
         $context = array();
 
         $nlead = $this->leading_context_lines;
@@ -62,7 +62,7 @@ class DiffFormatter
                             $block[] = new Copy($context);
                         }
                         $this->block($x0, $ntrail + $xi - $x0, $y0, $ntrail + $yi - $y0, $block);
-                        $block = FALSE;
+                        $block = false;
                     }
                 }
                 $context = $edit->orig;
@@ -178,6 +178,7 @@ class DiffFormatter
     {
         $this->lines($lines, '>');
     }
+
     private function deleted($lines)
     {
         $this->lines($lines, '<');

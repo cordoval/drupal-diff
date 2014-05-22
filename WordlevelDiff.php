@@ -2,6 +2,8 @@
 
 namespace Drupal\Component\Diff;
 
+use Drupal\Component\Utility\Unicode;
+
 class WordLevelDiff extends MappedDiff
 {
     public function MAX_LINE_LENGTH()
@@ -11,8 +13,8 @@ class WordLevelDiff extends MappedDiff
 
     public function __construct($orig_lines, $closing_lines)
     {
-        list($orig_words, $orig_stripped) = $this->_split($orig_lines);
-        list($closing_words, $closing_stripped) = $this->_split($closing_lines);
+        list($orig_words, $orig_stripped) = $this->split($orig_lines);
+        list($closing_words, $closing_stripped) = $this->split($closing_lines);
 
         $this->MappedDiff($orig_words, $closing_words, $orig_stripped, $closing_stripped);
     }
@@ -21,12 +23,12 @@ class WordLevelDiff extends MappedDiff
     {
         $words = array();
         $stripped = array();
-        $first = TRUE;
+        $first = true;
         foreach ($lines as $line) {
             // If the line is too long, just pretend the entire line is one big word
             // This prevents resource exhaustion problems
             if ( $first ) {
-                $first = FALSE;
+                $first = false;
             }
             else {
                 $words[] = "\n";
