@@ -1,12 +1,9 @@
 <?php
 
-/**
- * FIXME: bad name.
- * @todo document
- * @private
- * @subpackage DifferenceEngine
- */
-class MappedDiff extends Diff {
+namespace Drupal\Component\Diff;
+
+class MappedDiff extends Diff
+{
     /**
      * Constructor.
      *

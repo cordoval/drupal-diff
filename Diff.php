@@ -1,9 +1,12 @@
 <?php
 
+namespace Drupal\Component\Diff;
+
 /**
  * Class representing a 'diff' between two sequences of strings.
  */
-class Diff {
+class Diff
+{
     var $edits;
 
     /**
@@ -14,8 +17,8 @@ class Diff {
      *      (Typically these are lines from a file.)
      * @param $to_lines array An array of strings.
      */
-    function Diff($from_lines, $to_lines) {
-        $eng = new _DiffEngine;
+    function __construct($from_lines, $to_lines) {
+        $eng = new Engine;
         $this->edits = $eng->diff($from_lines, $to_lines);
         //$this->_check($from_lines, $to_lines);
     }

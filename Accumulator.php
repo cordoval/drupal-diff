@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\Component\Diff;
+
 /**
  *  Additions by Axel Boldt follow, partly taken from diff.php, phpwiki-1.3.3
  *
@@ -7,15 +9,15 @@
 
 define('NBSP', '&#160;');      // iso-8859-x non-breaking space.
 
-class _HWLDF_WordAccumulator {
-    function _HWLDF_WordAccumulator() {
+class HWLDFWordAccumulator {
+    function __construct() {
         $this->_lines = array();
         $this->_line = '';
         $this->_group = '';
         $this->_tag = '';
     }
 
-    function _flushGroup($new_tag) {
+    function flushGroup($new_tag) {
         if ($this->_group !== '') {
             if ($this->_tag == 'mark') {
                 $this->_line .= '<span class="diffchange">' . String::checkPlain($this->_group) . '</span>';
@@ -28,7 +30,7 @@ class _HWLDF_WordAccumulator {
         $this->_tag = $new_tag;
     }
 
-    function _flushLine($new_tag) {
+    function flushLine($new_tag) {
         $this->_flushGroup($new_tag);
         if ($this->_line != '') {
             array_push($this->_lines, $this->_line);

@@ -2,13 +2,13 @@
 
 namespace Drupal\Component\Diff\Op;
 
-use Drupal\Component\Diff\DiffOp;
+use Drupal\Component\Diff\Op;
 
-class Copy extends DiffOp
+class Copy extends Op
 {
     var $type = 'copy';
 
-    function _DiffOp_Copy($orig, $closing = FALSE) {
+    function copy($orig, $closing = FALSE) {
         if (!is_array($closing)) {
             $closing = $orig;
         }

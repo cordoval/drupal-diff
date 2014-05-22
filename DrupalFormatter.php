@@ -1,9 +1,9 @@
 <?php
 
+namespace Drupal\Component\Diff;
+
 /**
  * Diff formatter which uses Drupal theme functions.
- * @private
- * @subpackage DifferenceEngine
  */
 class DrupalDiffFormatter extends DiffFormatter {
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\Component\Diff;
+
 class WordLevelDiff extends MappedDiff {
     function MAX_LINE_LENGTH() {
         return 10000;

@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\Component\Diff;
+
 /**
  * Class used internally by Diff to actually compute the diffs.
  *
@@ -20,10 +22,8 @@
  * Line length limits for robustness added by Tim Starling, 2005-08-31
  *
  * @author Geoffrey T. Dairiki, Tim Starling
- * @private
- * @subpackage DifferenceEngine
  */
-class DiffEngine {
+class Engine {
     function MAX_XREF_LENGTH() {
         return 10000;
     }

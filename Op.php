@@ -2,7 +2,7 @@
 
 namespace Drupal\Component\Diff;
 
-class DiffOp
+class Op
 {
     var $type;
     var $orig;

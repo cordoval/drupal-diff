@@ -1,15 +1,19 @@
 <?php
 
+namespace Drupal\Component\Diff\Op;
 
-class _DiffOp_Add extends _DiffOp {
+use Drupal\Component\Diff\Op;
+
+class Add extends Op
+{
     var $type = 'add';
 
-    function _DiffOp_Add($lines) {
+    function add($lines) {
         $this->closing = $lines;
         $this->orig = FALSE;
     }
 
     function reverse() {
-        return new _DiffOp_Delete($this->closing);
+        return new Delete($this->closing);
     }
 }
