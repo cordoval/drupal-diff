@@ -14,67 +14,6 @@ use Drupal\Core\Site\Settings;
 
 define('USE_ASSERTS', FALSE);
 
-/**
- * @todo document
- * @private
- * @subpackage DifferenceEngine
- */
-class _DiffOp {
-  var $type;
-  var $orig;
-  var $closing;
-
-  function reverse() {
-    trigger_error('pure virtual', E_USER_ERROR);
-  }
-
-  function norig() {
-    return $this->orig ? sizeof($this->orig) : 0;
-  }
-
-  function nclosing() {
-    return $this->closing ? sizeof($this->closing) : 0;
-  }
-}
-
-/**
- * @todo document
- * @private
- * @subpackage DifferenceEngine
- */
-class _DiffOp_Copy extends _DiffOp {
-  var $type = 'copy';
-
-  function _DiffOp_Copy($orig, $closing = FALSE) {
-    if (!is_array($closing)) {
-      $closing = $orig;
-    }
-    $this->orig = $orig;
-    $this->closing = $closing;
-  }
-
-  function reverse() {
-    return new _DiffOp_Copy($this->closing, $this->orig);
-  }
-}
-
-/**
- * @todo document
- * @private
- * @subpackage DifferenceEngine
- */
-class _DiffOp_Delete extends _DiffOp {
-  var $type = 'delete';
-
-  function _DiffOp_Delete($lines) {
-    $this->orig = $lines;
-    $this->closing = FALSE;
-  }
-
-  function reverse() {
-    return new _DiffOp_Add($this->orig);
-  }
-}
 
 /**
  * @todo document
