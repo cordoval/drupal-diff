@@ -145,7 +145,7 @@ class Engine
     /**
      * Returns the whole line if it's small enough, or the MD5 hash otherwise.
      */
-    function _line_hash($line) {
+    private function line_hash($line) {
         if (Unicode::strlen($line) > $this->MAX_XREF_LENGTH()) {
             return md5($line);
         }
@@ -172,7 +172,7 @@ class Engine
      * match.  The caller must trim matching lines from the beginning and end
      * of the portions it is going to specify.
      */
-    function _diag($xoff, $xlim, $yoff, $ylim, $nchunks) {
+    private function diag($xoff, $xlim, $yoff, $ylim, $nchunks) {
         $flip = FALSE;
 
         if ($xlim - $xoff > $ylim - $yoff) {
@@ -252,7 +252,7 @@ class Engine
         return array($this->lcs, $seps);
     }
 
-    function _lcs_pos($ypos) {
+    private function lcs_pos($ypos) {
 
         $end = $this->lcs;
         if ($end == 0 || $ypos > $this->seq[$end]) {
@@ -292,7 +292,7 @@ class Engine
      * Note that XLIM, YLIM are exclusive bounds.
      * All line numbers are origin-0 and discarded lines are not counted.
      */
-    function _compareseq($xoff, $xlim, $yoff, $ylim) {
+    private function compareseq($xoff, $xlim, $yoff, $ylim) {
 
         // Slide down the bottom initial diagonal.
         while ($xoff < $xlim && $yoff < $ylim && $this->xv[$xoff] == $this->yv[$yoff]) {
@@ -352,7 +352,7 @@ class Engine
      *
      * This is extracted verbatim from analyze.c (GNU diffutils-2.7).
      */
-    function _shift_boundaries($lines, &$changed, $other_changed) {
+    private function shift_boundaries($lines, &$changed, $other_changed) {
         $i = 0;
         $j = 0;
 

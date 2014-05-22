@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\Component\Diff;
+use Drupal\Component\Diff\Op\Copy;
 
 /**
  * A class to format Diffs
@@ -47,7 +48,7 @@ class DiffFormatter
         $nlead = $this->leading_context_lines;
         $ntrail = $this->trailing_context_lines;
 
-        $this->_start_diff();
+        $this->start_diff();
 
         foreach ($diff->edits as $edit) {
             if ($edit->type == 'copy') {
@@ -58,9 +59,9 @@ class DiffFormatter
                     else {
                         if ($ntrail) {
                             $context = array_slice($edit->orig, 0, $ntrail);
-                            $block[] = new _DiffOp_Copy($context);
+                            $block[] = new Copy($context);
                         }
-                        $this->_block($x0, $ntrail + $xi - $x0, $y0, $ntrail + $yi - $y0, $block);
+                        $this->block($x0, $ntrail + $xi - $x0, $y0, $ntrail + $yi - $y0, $block);
                         $block = FALSE;
                     }
                 }
@@ -73,7 +74,7 @@ class DiffFormatter
                     $y0 = $yi - sizeof($context);
                     $block = array();
                     if ($context) {
-                        $block[] = new _DiffOp_Copy($context);
+                        $block[] = new Copy($context);
                     }
                 }
                 $block[] = $edit;
@@ -88,9 +89,9 @@ class DiffFormatter
         }
 
         if (is_array($block)) {
-            $this->_block($x0, $xi - $x0, $y0, $yi - $y0, $block);
+            $this->block($x0, $xi - $x0, $y0, $yi - $y0, $block);
         }
-        $end = $this->_end_diff();
+        $end = $this->end_diff();
 
         if (!empty($xi)) {
             $this->line_stats['counter']['x'] += $xi;
@@ -104,25 +105,25 @@ class DiffFormatter
 
     protected function block($xbeg, $xlen, $ybeg, $ylen, &$edits)
     {
-        $this->_start_block($this->_block_header($xbeg, $xlen, $ybeg, $ylen));
+        $this->start_block($this->block_header($xbeg, $xlen, $ybeg, $ylen));
         foreach ($edits as $edit) {
             if ($edit->type == 'copy') {
-                $this->_context($edit->orig);
+                $this->context($edit->orig);
             }
             elseif ($edit->type == 'add') {
-                $this->_added($edit->closing);
+                $this->added($edit->closing);
             }
             elseif ($edit->type == 'delete') {
-                $this->_deleted($edit->orig);
+                $this->deleted($edit->orig);
             }
             elseif ($edit->type == 'change') {
-                $this->_changed($edit->orig, $edit->closing);
+                $this->changed($edit->orig, $edit->closing);
             }
             else {
                 trigger_error('Unknown edit type', E_USER_ERROR);
             }
         }
-        $this->_end_block();
+        $this->end_block();
     }
 
     private function start_diff()
@@ -133,6 +134,7 @@ class DiffFormatter
     private function end_diff() {
         $val = ob_get_contents();
         ob_end_clean();
+
         return $val;
     }
 
@@ -163,19 +165,19 @@ class DiffFormatter
     }
 
     private function context($lines) {
-        $this->_lines($lines);
+        $this->lines($lines);
     }
 
     private function added($lines) {
-        $this->_lines($lines, '>');
+        $this->lines($lines, '>');
     }
     private function deleted($lines) {
-        $this->_lines($lines, '<');
+        $this->lines($lines, '<');
     }
 
     private function changed($orig, $closing) {
-        $this->_deleted($orig);
+        $this->deleted($orig);
         echo "---\n";
-        $this->_added($closing);
+        $this->added($closing);
     }
 }
