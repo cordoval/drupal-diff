@@ -17,7 +17,8 @@ class Diff
      *      (Typically these are lines from a file.)
      * @param $to_lines array An array of strings.
      */
-    public function __construct($from_lines, $to_lines) {
+    public function __construct($from_lines, $to_lines)
+    {
         $eng = new Engine;
         $this->edits = $eng->diff($from_lines, $to_lines);
         //$this->_check($from_lines, $to_lines);
@@ -33,7 +34,8 @@ class Diff
      * @return object A Diff object representing the inverse of the
      *          original diff.
      */
-    public function reverse() {
+    public function reverse()
+    {
         $rev = $this;
         $rev->edits = array();
         foreach ($this->edits as $edit) {
@@ -47,13 +49,14 @@ class Diff
      *
      * @return bool True iff two sequences were identical.
      */
-    public function isEmpty() {
+    public function isEmpty()
+    {
         foreach ($this->edits as $edit) {
             if ($edit->type != 'copy') {
-                return FALSE;
+                return false;
             }
         }
-        return TRUE;
+        return true;
     }
 
     /**
@@ -122,7 +125,7 @@ class Diff
      *
      * This is here only for debugging purposes.
      */
-    private function check($from_lines, $to_lines)
+    public function check($from_lines, $to_lines)
     {
         if (serialize($from_lines) != serialize($this->orig())) {
             trigger_error("Reconstructed original doesn't match", E_USER_ERROR);

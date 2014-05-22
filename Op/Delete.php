@@ -6,12 +6,14 @@ class Delete extends Op
 {
     protected $type = 'delete';
 
-    public function delete($lines) {
+    public function delete($lines)
+    {
         $this->orig = $lines;
         $this->closing = false;
     }
 
-    public function reverse() {
+    public function reverse()
+    {
         return new Add($this->orig);
     }
 }

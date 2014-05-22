@@ -6,7 +6,8 @@ class Copy extends Op
 {
     protected $type = 'copy';
 
-    public function copy($orig, $closing = FALSE) {
+    public function copy($orig, $closing = false)
+    {
         if (!is_array($closing)) {
             $closing = $orig;
         }
@@ -14,7 +15,8 @@ class Copy extends Op
         $this->closing = $closing;
     }
 
-    public function reverse() {
+    public function reverse()
+    {
         return new Copy($this->closing, $this->orig);
     }
 }

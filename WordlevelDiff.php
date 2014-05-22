@@ -4,18 +4,21 @@ namespace Drupal\Component\Diff;
 
 class WordLevelDiff extends MappedDiff
 {
-    public function MAX_LINE_LENGTH() {
+    public function MAX_LINE_LENGTH()
+    {
         return 10000;
     }
 
-    public function __construct($orig_lines, $closing_lines) {
+    public function __construct($orig_lines, $closing_lines)
+    {
         list($orig_words, $orig_stripped) = $this->_split($orig_lines);
         list($closing_words, $closing_stripped) = $this->_split($closing_lines);
 
         $this->MappedDiff($orig_words, $closing_words, $orig_stripped, $closing_stripped);
     }
 
-    public function split($lines) {
+    public function split($lines)
+    {
         $words = array();
         $stripped = array();
         $first = TRUE;
@@ -43,7 +46,8 @@ class WordLevelDiff extends MappedDiff
         return array($words, $stripped);
     }
 
-    public function orig() {
+    public function orig()
+    {
         $orig = new Accumulator;
 
         foreach ($this->edits as $edit) {
@@ -58,7 +62,8 @@ class WordLevelDiff extends MappedDiff
         return $lines;
     }
 
-    public function closing() {
+    public function closing()
+    {
         $closing = new Accumulator;
 
         foreach ($this->edits as $edit) {

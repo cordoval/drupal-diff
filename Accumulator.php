@@ -17,17 +17,19 @@ class Accumulator
     protected $group;
     protected $tag;
 
-    function __construct() {
+    public function __construct()
+    {
         $this->lines = array();
         $this->line = '';
         $this->group = '';
         $this->tag = '';
     }
 
-    public function flushGroup($new_tag) {
-        if ($this->_group !== '') {
-            if ($this->_tag == 'mark') {
-                $this->_line .= '<span class="diffchange">' . String::checkPlain($this->group) . '</span>';
+    public function flushGroup($new_tag)
+    {
+        if ($this->group !== '') {
+            if ($this->tag == 'mark') {
+                $this->line .= '<span class="diffchange">' . String::checkPlain($this->group) . '</span>';
             }
             else {
                 $this->line .= String::checkPlain($this->group);
@@ -37,9 +39,10 @@ class Accumulator
         $this->tag = $new_tag;
     }
 
-    public function flushLine($new_tag) {
+    public function flushLine($new_tag)
+    {
         $this->flushGroup($new_tag);
-        if ($this->_line != '') {
+        if ($this->line != '') {
             array_push($this->lines, $this->line);
         }
         else {
@@ -49,8 +52,9 @@ class Accumulator
         $this->line = '';
     }
 
-    public function addWords($words, $tag = '') {
-        if ($tag != $this->_tag) {
+    public function addWords($words, $tag = '')
+    {
+        if ($tag != $this->tag) {
             $this->flushGroup($tag);
         }
         foreach ($words as $word) {
@@ -63,13 +67,15 @@ class Accumulator
                 $word = Unicode::substr($word, 1);
             }
             assert(!strstr($word, "\n"));
-            $this->_group .= $word;
+            $this->group .= $word;
         }
     }
 
-    public function getLines() {
+    public function getLines()
+    {
         $this->flushLine('~done');
-        return $this->_lines;
+
+        return $this->lines;
     }
 }
 

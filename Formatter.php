@@ -15,7 +15,7 @@ class DiffFormatter
     /**
      * Should a block header be shown?
      */
-    var $show_header = TRUE;
+    protected $show_header = TRUE;
 
     /**
      * Number of leading context "lines" to preserve.
@@ -23,7 +23,7 @@ class DiffFormatter
      * This should be left at zero for this class, but subclasses
      * may want to set this to other values.
      */
-    var $leading_context_lines = 0;
+    protected $leading_context_lines = 0;
 
     /**
      * Number of trailing context "lines" to preserve.
@@ -31,7 +31,7 @@ class DiffFormatter
      * This should be left at zero for this class, but subclasses
      * may want to set this to other values.
      */
-    var $trailing_context_lines = 0;
+    protected $trailing_context_lines = 0;
 
     /**
      * Format a diff.
@@ -131,14 +131,16 @@ class DiffFormatter
         ob_start();
     }
 
-    private function end_diff() {
+    private function end_diff()
+    {
         $val = ob_get_contents();
         ob_end_clean();
 
         return $val;
     }
 
-    private function block_header($xbeg, $xlen, $ybeg, $ylen) {
+    private function block_header($xbeg, $xlen, $ybeg, $ylen)
+    {
         if ($xlen > 1) {
             $xbeg .= "," . ($xbeg + $xlen - 1);
         }
@@ -149,33 +151,40 @@ class DiffFormatter
         return $xbeg . ($xlen ? ($ylen ? 'c' : 'd') : 'a') . $ybeg;
     }
 
-    private function start_block($header) {
+    private function start_block($header)
+    {
         if ($this->show_header) {
             echo $header . "\n";
         }
     }
 
-    private function end_block() {
+    private function end_block()
+    {
     }
 
-    private function lines($lines, $prefix = ' ') {
+    private function lines($lines, $prefix = ' ')
+    {
         foreach ($lines as $line) {
             echo "$prefix $line\n";
         }
     }
 
-    private function context($lines) {
+    private function context($lines)
+    {
         $this->lines($lines);
     }
 
-    private function added($lines) {
+    private function added($lines)
+    {
         $this->lines($lines, '>');
     }
-    private function deleted($lines) {
+    private function deleted($lines)
+    {
         $this->lines($lines, '<');
     }
 
-    private function changed($orig, $closing) {
+    private function changed($orig, $closing)
+    {
         $this->deleted($orig);
         echo "---\n";
         $this->added($closing);

@@ -4,7 +4,6 @@ namespace Drupal\Component\Diff;
 
 define('USE_ASSERTS', FALSE);
 
-
 /**
  * @file
  * A PHP diff engine for phpwiki. (Taken from phpwiki-1.3.3)
@@ -13,10 +12,13 @@ define('USE_ASSERTS', FALSE);
  * You may copy this code freely under the conditions of the GPL.
  */
 
+use Drupal\Component\Diff\Op\Add;
+use Drupal\Component\Diff\Op\Change;
+use Drupal\Component\Diff\Op\Copy;
+use Drupal\Component\Diff\Op\Delete;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Site\Settings;
-
 
 /**
  * Class used internally by Diff to actually compute the diffs.
@@ -41,12 +43,13 @@ use Drupal\Core\Site\Settings;
  */
 class Engine
 {
-    function MAX_XREF_LENGTH() {
+    public function MAX_XREF_LENGTH()
+    {
         return 10000;
     }
 
-    function diff($from_lines, $to_lines) {
-
+    public function diff($from_lines, $to_lines)
+    {
         $n_from = sizeof($from_lines);
         $n_to = sizeof($to_lines);
 
@@ -76,21 +79,21 @@ class Engine
 
         // Ignore lines which do not exist in both files.
         for ($xi = $skip; $xi < $n_from - $endskip; $xi++) {
-            $xhash[$this->_line_hash($from_lines[$xi])] = 1;
+            $xhash[$this->line_hash($from_lines[$xi])] = 1;
         }
 
         for ($yi = $skip; $yi < $n_to - $endskip; $yi++) {
             $line = $to_lines[$yi];
-            if ($this->ychanged[$yi] = empty($xhash[$this->_line_hash($line)])) {
+            if ($this->ychanged[$yi] = empty($xhash[$this->line_hash($line)])) {
                 continue;
             }
-            $yhash[$this->_line_hash($line)] = 1;
+            $yhash[$this->line_hash($line)] = 1;
             $this->yv[] = $line;
             $this->yind[] = $yi;
         }
         for ($xi = $skip; $xi < $n_from - $endskip; $xi++) {
             $line = $from_lines[$xi];
-            if ($this->xchanged[$xi] = empty($yhash[$this->_line_hash($line)])) {
+            if ($this->xchanged[$xi] = empty($yhash[$this->line_hash($line)])) {
                 continue;
             }
             $this->xv[] = $line;
@@ -98,11 +101,11 @@ class Engine
         }
 
         // Find the LCS.
-        $this->_compareseq(0, sizeof($this->xv), 0, sizeof($this->yv));
+        $this->compareseq(0, sizeof($this->xv), 0, sizeof($this->yv));
 
         // Merge edits when possible
-        $this->_shift_boundaries($from_lines, $this->xchanged, $this->ychanged);
-        $this->_shift_boundaries($to_lines, $this->ychanged, $this->xchanged);
+        $this->shift_boundaries($from_lines, $this->xchanged, $this->ychanged);
+        $this->shift_boundaries($to_lines, $this->ychanged, $this->xchanged);
 
         // Compute the edit operations.
         $edits = array();
@@ -118,7 +121,7 @@ class Engine
                 ++$yi;
             }
             if ($copy) {
-                $edits[] = new _DiffOp_Copy($copy);
+                $edits[] = new Copy($copy);
             }
             // Find deletes & adds.
             $delete = array();
@@ -130,13 +133,13 @@ class Engine
                 $add[] = $to_lines[$yi++];
             }
             if ($delete && $add) {
-                $edits[] = new _DiffOp_Change($delete, $add);
+                $edits[] = new Change($delete, $add);
             }
             elseif ($delete) {
-                $edits[] = new _DiffOp_Delete($delete);
+                $edits[] = new Delete($delete);
             }
             elseif ($add) {
-                $edits[] = new _DiffOp_Add($add);
+                $edits[] = new Add($add);
             }
         }
         return $edits;
@@ -145,13 +148,13 @@ class Engine
     /**
      * Returns the whole line if it's small enough, or the MD5 hash otherwise.
      */
-    private function line_hash($line) {
+    private function line_hash($line)
+    {
         if (Unicode::strlen($line) > $this->MAX_XREF_LENGTH()) {
             return md5($line);
         }
-        else {
-            return $line;
-        }
+
+        return $line;
     }
 
 
@@ -172,13 +175,14 @@ class Engine
      * match.  The caller must trim matching lines from the beginning and end
      * of the portions it is going to specify.
      */
-    private function diag($xoff, $xlim, $yoff, $ylim, $nchunks) {
-        $flip = FALSE;
+    public function diag($xoff, $xlim, $yoff, $ylim, $nchunks)
+    {
+        $flip = false;
 
         if ($xlim - $xoff > $ylim - $yoff) {
             // Things seems faster (I'm not sure I understand why)
             // when the shortest sequence in X.
-            $flip = TRUE;
+            $flip = true;
             list($xoff, $xlim, $yoff, $ylim) = array($yoff, $ylim, $xoff, $xlim);
         }
 
@@ -252,12 +256,13 @@ class Engine
         return array($this->lcs, $seps);
     }
 
-    private function lcs_pos($ypos) {
-
+    public function lcs_pos($ypos)
+    {
         $end = $this->lcs;
         if ($end == 0 || $ypos > $this->seq[$end]) {
             $this->seq[++$this->lcs] = $ypos;
             $this->in_seq[$ypos] = 1;
+
             return $this->lcs;
         }
 
@@ -266,17 +271,17 @@ class Engine
             $mid = (int)(($beg + $end) / 2);
             if ($ypos > $this->seq[$mid]) {
                 $beg = $mid + 1;
-            }
-            else {
+            } else {
                 $end = $mid;
             }
         }
 
         USE_ASSERTS && assert($ypos != $this->seq[$end]);
 
-        $this->in_seq[$this->seq[$end]] = FALSE;
+        $this->in_seq[$this->seq[$end]] = false;
         $this->seq[$end] = $ypos;
         $this->in_seq[$ypos] = 1;
+
         return $end;
     }
 
@@ -292,8 +297,8 @@ class Engine
      * Note that XLIM, YLIM are exclusive bounds.
      * All line numbers are origin-0 and discarded lines are not counted.
      */
-    private function compareseq($xoff, $xlim, $yoff, $ylim) {
-
+    private function compareseq($xoff, $xlim, $yoff, $ylim)
+    {
         // Slide down the bottom initial diagonal.
         while ($xoff < $xlim && $yoff < $ylim && $this->xv[$xoff] == $this->yv[$yoff]) {
             ++$xoff;
@@ -308,8 +313,7 @@ class Engine
 
         if ($xoff == $xlim || $yoff == $ylim) {
             $lcs = 0;
-        }
-        else {
+        } else {
             // This is ad hoc but seems to work well.
             //$nchunks = sqrt(min($xlim - $xoff, $ylim - $yoff) / 2.5);
             //$nchunks = max(2, min(8, (int)$nchunks));
@@ -327,8 +331,7 @@ class Engine
             while ($xoff < $xlim) {
                 $this->xchanged[$this->xind[$xoff++]] = 1;
             }
-        }
-        else {
+        } else {
             // Use the partitions to split this problem into subproblems.
             reset($seps);
             $pt1 = $seps[0];
@@ -352,7 +355,8 @@ class Engine
      *
      * This is extracted verbatim from analyze.c (GNU diffutils-2.7).
      */
-    private function shift_boundaries($lines, &$changed, $other_changed) {
+    private function shift_boundaries($lines, &$changed, $other_changed)
+    {
         $i = 0;
         $j = 0;
 

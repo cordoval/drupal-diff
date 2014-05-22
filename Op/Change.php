@@ -6,12 +6,14 @@ class Change extends Op
 {
     protected $type = 'change';
 
-    public function change($orig, $closing) {
+    public function change($orig, $closing)
+    {
         $this->orig = $orig;
         $this->closing = $closing;
     }
 
-    public function reverse() {
+    public function reverse()
+    {
         return new Change($this->closing, $this->orig);
     }
 }
