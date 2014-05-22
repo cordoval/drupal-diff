@@ -6,13 +6,15 @@
     "require": {
         "php": ">=5.4.2"
     },
+    "require-dev": {
+
+    },
     "autoload": {
         "psr-4": {
             "Drupal\\Component\\Diff\\": "core/lib/Drupal/Component/Diff"
         }
     },
     "config": {
-        "vendor-dir": "core/vendor",
         "preferred-install": "dist",
         "autoloader-suffix": "Drupal8"
     }

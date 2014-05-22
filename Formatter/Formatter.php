@@ -47,7 +47,7 @@ class Formatter
         $nlead = $this->leading_context_lines;
         $ntrail = $this->trailing_context_lines;
 
-        $this->start_diff();
+        $this->startDiff();
 
         foreach ($diff->edits as $edit) {
             if ($edit->type == 'copy') {
@@ -90,7 +90,7 @@ class Formatter
         if (is_array($block)) {
             $this->block($x0, $xi - $x0, $y0, $yi - $y0, $block);
         }
-        $end = $this->end_diff();
+        $end = $this->endDiff();
 
         if (!empty($xi)) {
             $this->line_stats['counter']['x'] += $xi;
@@ -104,7 +104,7 @@ class Formatter
 
     protected function block($xbeg, $xlen, $ybeg, $ylen, &$edits)
     {
-        $this->start_block($this->block_header($xbeg, $xlen, $ybeg, $ylen));
+        $this->startBlock($this->blockHeader($xbeg, $xlen, $ybeg, $ylen));
         foreach ($edits as $edit) {
             if ($edit->type == 'copy') {
                 $this->context($edit->orig);
@@ -122,15 +122,15 @@ class Formatter
                 trigger_error('Unknown edit type', E_USER_ERROR);
             }
         }
-        $this->end_block();
+        $this->endBlock();
     }
 
-    private function start_diff()
+    private function startDiff()
     {
         ob_start();
     }
 
-    private function end_diff()
+    private function endDiff()
     {
         $val = ob_get_contents();
         ob_end_clean();
@@ -138,7 +138,7 @@ class Formatter
         return $val;
     }
 
-    private function block_header($xbeg, $xlen, $ybeg, $ylen)
+    private function blockHeader($xbeg, $xlen, $ybeg, $ylen)
     {
         if ($xlen > 1) {
             $xbeg .= "," . ($xbeg + $xlen - 1);
@@ -150,14 +150,14 @@ class Formatter
         return $xbeg . ($xlen ? ($ylen ? 'c' : 'd') : 'a') . $ybeg;
     }
 
-    private function start_block($header)
+    private function startBlock($header)
     {
         if ($this->show_header) {
             echo $header . "\n";
         }
     }
 
-    private function end_block()
+    private function endBlock()
     {
     }
 

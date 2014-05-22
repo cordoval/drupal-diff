@@ -5,8 +5,6 @@ namespace Drupal\Component\Diff\Diff;
 class MappedDiff extends Diff
 {
     /**
-     * Constructor.
-     *
      * Computes diff between sequences of strings.
      *
      * This can be used to compute things like
@@ -27,7 +25,7 @@ class MappedDiff extends Diff
      * @param $mapped_to_lines array This array should
      *  have the same number of elements as $to_lines.
      */
-    function MappedDiff($from_lines, $to_lines, $mapped_from_lines, $mapped_to_lines)
+    public function __construct($from_lines, $to_lines, $mapped_from_lines, $mapped_to_lines)
     {
         assert(sizeof($from_lines) == sizeof($mapped_from_lines));
         assert(sizeof($to_lines) == sizeof($mapped_to_lines));
