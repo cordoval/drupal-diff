@@ -1,0 +1,19 @@
+{
+    "name": "drupal/diff",
+    "description": "Drupal diff component.",
+    "type": "drupal-component",
+    "license": "GPL-2.0+",
+    "require": {
+        "php": ">=5.4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\Diff": "core/lib/Drupal/Component/Diff"
+        }
+    },
+    "config": {
+        "vendor-dir": "core/vendor",
+        "preferred-install": "dist",
+        "autoloader-suffix": "Drupal8"
+    }
+}
