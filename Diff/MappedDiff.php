@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Component\Diff;
+namespace Drupal\Component\Diff\Diff;
 
 class MappedDiff extends Diff
 {

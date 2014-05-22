@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Component\Diff;
+namespace Drupal\Component\Diff\Diff;
 
 /**
  * Class representing a 'diff' between two sequences of strings.

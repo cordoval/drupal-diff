@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Component\Diff;
+namespace Drupal\Component\Diff\Formatter;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Site\Settings;
@@ -8,7 +8,7 @@ use Drupal\Core\Site\Settings;
 /**
  * Diff formatter which uses Drupal theme functions.
  */
-class DrupalDiffFormatter extends DiffFormatter
+class DrupalDiffFormatter extends Formatter
 {
     protected $rows;
     protected $line_stats = array(
