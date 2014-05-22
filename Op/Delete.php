@@ -1,16 +1,17 @@
 <?php
 
-use Drupal\Component\Diff\DiffOp;
+namespace Drupal\Component\Diff\Op;
 
-class Delete extends DiffOp {
-    var $type = 'delete';
+class Delete extends Op
+{
+    protected $type = 'delete';
 
-    function Delete($lines) {
+    public function delete($lines) {
         $this->orig = $lines;
-        $this->closing = FALSE;
+        $this->closing = false;
     }
 
-    function reverse() {
+    public function reverse() {
         return new Add($this->orig);
     }
 }

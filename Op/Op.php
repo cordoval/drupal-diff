@@ -1,22 +1,22 @@
 <?php
 
-namespace Drupal\Component\Diff;
+namespace Drupal\Component\Diff\Op;
 
-class DiffOp
+class Op
 {
     var $type;
     var $orig;
     var $closing;
 
-    function reverse() {
+    public function reverse() {
         trigger_error('pure virtual', E_USER_ERROR);
     }
 
-    function norig() {
+    public function norig() {
         return $this->orig ? sizeof($this->orig) : 0;
     }
 
-    function nclosing() {
+    public function nclosing() {
         return $this->closing ? sizeof($this->closing) : 0;
     }
 }

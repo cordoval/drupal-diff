@@ -1,19 +1,16 @@
 <?php
 
-/**
- * FIXME: bad name.
- * @todo document
- * @private
- * @subpackage DifferenceEngine
- */
-class MappedDiff extends Diff {
+namespace Drupal\Component\Diff;
+
+class MappedDiff extends Diff
+{
     /**
      * Constructor.
      *
      * Computes diff between sequences of strings.
      *
      * This can be used to compute things like
-     * case-insensitve diffs, or diffs which ignore
+     * case-insensitive diffs, or diffs which ignore
      * changes in white-space.
      *
      * @param $from_lines array An array of strings.
@@ -35,7 +32,7 @@ class MappedDiff extends Diff {
         assert(sizeof($from_lines) == sizeof($mapped_from_lines));
         assert(sizeof($to_lines) == sizeof($mapped_to_lines));
 
-        $this->Diff($mapped_from_lines, $mapped_to_lines);
+        parent::__construct($mapped_from_lines, $mapped_to_lines);
 
         $xi = $yi = 0;
         for ($i = 0; $i < sizeof($this->edits); $i++) {
