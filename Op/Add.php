@@ -6,12 +6,14 @@ class Add extends Op
 {
     protected $type = 'add';
 
-    public function add($lines) {
+    public function add($lines)
+    {
         $this->closing = $lines;
-        $this->orig = FALSE;
+        $this->orig = false;
     }
 
-    public function reverse() {
+    public function reverse()
+    {
         return new Delete($this->closing);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\Component\Diff;
+use Drupal\Component\Diff\Op\Copy;
 
 /**
  * A class to format Diffs
@@ -14,7 +15,7 @@ class DiffFormatter
     /**
      * Should a block header be shown?
      */
-    var $show_header = TRUE;
+    protected $show_header = true;
 
     /**
      * Number of leading context "lines" to preserve.
@@ -22,7 +23,7 @@ class DiffFormatter
      * This should be left at zero for this class, but subclasses
      * may want to set this to other values.
      */
-    var $leading_context_lines = 0;
+    protected $leading_context_lines = 0;
 
     /**
      * Number of trailing context "lines" to preserve.
@@ -30,7 +31,7 @@ class DiffFormatter
      * This should be left at zero for this class, but subclasses
      * may want to set this to other values.
      */
-    var $trailing_context_lines = 0;
+    protected $trailing_context_lines = 0;
 
     /**
      * Format a diff.
@@ -41,13 +42,13 @@ class DiffFormatter
     public function format($diff)
     {
         $xi = $yi = 1;
-        $block = FALSE;
+        $block = false;
         $context = array();
 
         $nlead = $this->leading_context_lines;
         $ntrail = $this->trailing_context_lines;
 
-        $this->_start_diff();
+        $this->start_diff();
 
         foreach ($diff->edits as $edit) {
             if ($edit->type == 'copy') {
@@ -58,10 +59,10 @@ class DiffFormatter
                     else {
                         if ($ntrail) {
                             $context = array_slice($edit->orig, 0, $ntrail);
-                            $block[] = new _DiffOp_Copy($context);
+                            $block[] = new Copy($context);
                         }
-                        $this->_block($x0, $ntrail + $xi - $x0, $y0, $ntrail + $yi - $y0, $block);
-                        $block = FALSE;
+                        $this->block($x0, $ntrail + $xi - $x0, $y0, $ntrail + $yi - $y0, $block);
+                        $block = false;
                     }
                 }
                 $context = $edit->orig;
@@ -73,7 +74,7 @@ class DiffFormatter
                     $y0 = $yi - sizeof($context);
                     $block = array();
                     if ($context) {
-                        $block[] = new _DiffOp_Copy($context);
+                        $block[] = new Copy($context);
                     }
                 }
                 $block[] = $edit;
@@ -88,9 +89,9 @@ class DiffFormatter
         }
 
         if (is_array($block)) {
-            $this->_block($x0, $xi - $x0, $y0, $yi - $y0, $block);
+            $this->block($x0, $xi - $x0, $y0, $yi - $y0, $block);
         }
-        $end = $this->_end_diff();
+        $end = $this->end_diff();
 
         if (!empty($xi)) {
             $this->line_stats['counter']['x'] += $xi;
@@ -104,25 +105,25 @@ class DiffFormatter
 
     protected function block($xbeg, $xlen, $ybeg, $ylen, &$edits)
     {
-        $this->_start_block($this->_block_header($xbeg, $xlen, $ybeg, $ylen));
+        $this->start_block($this->block_header($xbeg, $xlen, $ybeg, $ylen));
         foreach ($edits as $edit) {
             if ($edit->type == 'copy') {
-                $this->_context($edit->orig);
+                $this->context($edit->orig);
             }
             elseif ($edit->type == 'add') {
-                $this->_added($edit->closing);
+                $this->added($edit->closing);
             }
             elseif ($edit->type == 'delete') {
-                $this->_deleted($edit->orig);
+                $this->deleted($edit->orig);
             }
             elseif ($edit->type == 'change') {
-                $this->_changed($edit->orig, $edit->closing);
+                $this->changed($edit->orig, $edit->closing);
             }
             else {
                 trigger_error('Unknown edit type', E_USER_ERROR);
             }
         }
-        $this->_end_block();
+        $this->end_block();
     }
 
     private function start_diff()
@@ -130,13 +131,16 @@ class DiffFormatter
         ob_start();
     }
 
-    private function end_diff() {
+    private function end_diff()
+    {
         $val = ob_get_contents();
         ob_end_clean();
+
         return $val;
     }
 
-    private function block_header($xbeg, $xlen, $ybeg, $ylen) {
+    private function block_header($xbeg, $xlen, $ybeg, $ylen)
+    {
         if ($xlen > 1) {
             $xbeg .= "," . ($xbeg + $xlen - 1);
         }
@@ -147,35 +151,43 @@ class DiffFormatter
         return $xbeg . ($xlen ? ($ylen ? 'c' : 'd') : 'a') . $ybeg;
     }
 
-    private function start_block($header) {
+    private function start_block($header)
+    {
         if ($this->show_header) {
             echo $header . "\n";
         }
     }
 
-    private function end_block() {
+    private function end_block()
+    {
     }
 
-    private function lines($lines, $prefix = ' ') {
+    private function lines($lines, $prefix = ' ')
+    {
         foreach ($lines as $line) {
             echo "$prefix $line\n";
         }
     }
 
-    private function context($lines) {
-        $this->_lines($lines);
+    private function context($lines)
+    {
+        $this->lines($lines);
     }
 
-    private function added($lines) {
-        $this->_lines($lines, '>');
-    }
-    private function deleted($lines) {
-        $this->_lines($lines, '<');
+    private function added($lines)
+    {
+        $this->lines($lines, '>');
     }
 
-    private function changed($orig, $closing) {
-        $this->_deleted($orig);
+    private function deleted($lines)
+    {
+        $this->lines($lines, '<');
+    }
+
+    private function changed($orig, $closing)
+    {
+        $this->deleted($orig);
         echo "---\n";
-        $this->_added($closing);
+        $this->added($closing);
     }
 }

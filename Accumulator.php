@@ -2,50 +2,60 @@
 
 namespace Drupal\Component\Diff;
 
-/**
- *  Additions by Axel Boldt follow, partly taken from diff.php, phpwiki-1.3.3
- *
- */
+use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 
 define('NBSP', '&#160;');      // iso-8859-x non-breaking space.
 
+/**
+ *  Additions by Axel Boldt follow, partly taken from diff.php, phpwiki-1.3.3
+ */
 class Accumulator
 {
-    function __construct() {
-        $this->_lines = array();
-        $this->_line = '';
-        $this->_group = '';
-        $this->_tag = '';
+    protected $lines;
+    protected $line;
+    protected $group;
+    protected $tag;
+
+    public function __construct()
+    {
+        $this->lines = array();
+        $this->line = '';
+        $this->group = '';
+        $this->tag = '';
     }
 
-    function flushGroup($new_tag) {
-        if ($this->_group !== '') {
-            if ($this->_tag == 'mark') {
-                $this->_line .= '<span class="diffchange">' . String::checkPlain($this->_group) . '</span>';
+    public function flushGroup($new_tag)
+    {
+        if ($this->group !== '') {
+            if ($this->tag == 'mark') {
+                $this->line .= '<span class="diffchange">' . String::checkPlain($this->group) . '</span>';
             }
             else {
-                $this->_line .= String::checkPlain($this->_group);
+                $this->line .= String::checkPlain($this->group);
             }
         }
-        $this->_group = '';
-        $this->_tag = $new_tag;
+        $this->group = '';
+        $this->tag = $new_tag;
     }
 
-    function flushLine($new_tag) {
-        $this->_flushGroup($new_tag);
-        if ($this->_line != '') {
-            array_push($this->_lines, $this->_line);
+    public function flushLine($new_tag)
+    {
+        $this->flushGroup($new_tag);
+        if ($this->line != '') {
+            array_push($this->lines, $this->line);
         }
         else {
             // make empty lines visible by inserting an NBSP
-            array_push($this->_lines, NBSP);
+            array_push($this->lines, NBSP);
         }
-        $this->_line = '';
+        $this->line = '';
     }
 
-    function addWords($words, $tag = '') {
-        if ($tag != $this->_tag) {
-            $this->_flushGroup($tag);
+    public function addWords($words, $tag = '')
+    {
+        if ($tag != $this->tag) {
+            $this->flushGroup($tag);
         }
         foreach ($words as $word) {
             // new-line should only come as first char of word.
@@ -53,17 +63,18 @@ class Accumulator
                 continue;
             }
             if ($word[0] == "\n") {
-                $this->_flushLine($tag);
+                $this->flushLine($tag);
                 $word = Unicode::substr($word, 1);
             }
             assert(!strstr($word, "\n"));
-            $this->_group .= $word;
+            $this->group .= $word;
         }
     }
 
-    function getLines() {
-        $this->_flushLine('~done');
-        return $this->_lines;
+    public function getLines()
+    {
+        $this->flushLine('~done');
+
+        return $this->lines;
     }
 }
-
