@@ -2,11 +2,12 @@
 
 namespace Drupal\Component\Diff\Diff;
 
+use Drupal\Component\Diff\Accumulator;
 use Drupal\Component\Utility\Unicode;
 
 class WordLevelDiff extends MappedDiff
 {
-    public function MAX_LINE_LENGTH()
+    public function getMaxLineLength()
     {
         return 10000;
     }
@@ -34,7 +35,7 @@ class WordLevelDiff extends MappedDiff
                 $words[] = "\n";
                 $stripped[] = "\n";
             }
-            if ( Unicode::strlen( $line ) > $this->MAX_LINE_LENGTH() ) {
+            if ( Unicode::strlen( $line ) > $this->getMaxLineLength() ) {
                 $words[] = $line;
                 $stripped[] = $line;
             }
