@@ -2,19 +2,20 @@
 
 namespace Drupal\Component\Diff;
 
-class WordLevelDiff extends MappedDiff {
-    function MAX_LINE_LENGTH() {
+class WordLevelDiff extends MappedDiff
+{
+    public function MAX_LINE_LENGTH() {
         return 10000;
     }
 
-    function WordLevelDiff($orig_lines, $closing_lines) {
+    public function __construct($orig_lines, $closing_lines) {
         list($orig_words, $orig_stripped) = $this->_split($orig_lines);
         list($closing_words, $closing_stripped) = $this->_split($closing_lines);
 
         $this->MappedDiff($orig_words, $closing_words, $orig_stripped, $closing_stripped);
     }
 
-    function _split($lines) {
+    public function split($lines) {
         $words = array();
         $stripped = array();
         $first = TRUE;
@@ -42,33 +43,33 @@ class WordLevelDiff extends MappedDiff {
         return array($words, $stripped);
     }
 
-    function orig() {
-        $orig = new _HWLDF_WordAccumulator;
+    public function orig() {
+        $orig = new Accumulator;
 
         foreach ($this->edits as $edit) {
             if ($edit->type == 'copy') {
                 $orig->addWords($edit->orig);
-            }
-            elseif ($edit->orig) {
+            } elseif ($edit->orig) {
                 $orig->addWords($edit->orig, 'mark');
             }
         }
         $lines = $orig->getLines();
+
         return $lines;
     }
 
-    function closing() {
-        $closing = new _HWLDF_WordAccumulator;
+    public function closing() {
+        $closing = new Accumulator;
 
         foreach ($this->edits as $edit) {
             if ($edit->type == 'copy') {
                 $closing->addWords($edit->closing);
-            }
-            elseif ($edit->closing) {
+            } elseif ($edit->closing) {
                 $closing->addWords($edit->closing, 'mark');
             }
         }
         $lines = $closing->getLines();
+
         return $lines;
     }
 }

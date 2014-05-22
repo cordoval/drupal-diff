@@ -9,7 +9,8 @@ namespace Drupal\Component\Diff;
 
 define('NBSP', '&#160;');      // iso-8859-x non-breaking space.
 
-class HWLDFWordAccumulator {
+class Accumulator
+{
     function __construct() {
         $this->_lines = array();
         $this->_line = '';

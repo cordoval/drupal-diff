@@ -23,7 +23,8 @@ namespace Drupal\Component\Diff;
  *
  * @author Geoffrey T. Dairiki, Tim Starling
  */
-class Engine {
+class Engine
+{
     function MAX_XREF_LENGTH() {
         return 10000;
     }

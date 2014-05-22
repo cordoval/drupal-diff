@@ -9,7 +9,8 @@ namespace Drupal\Component\Diff;
  * It is intended that this class be customized via inheritance,
  * to obtain fancier outputs.
  */
-class DiffFormatter {
+class DiffFormatter
+{
     /**
      * Should a block header be shown?
      */
@@ -37,7 +38,8 @@ class DiffFormatter {
      * @param $diff object A Diff object.
      * @return string The formatted output.
      */
-    function format($diff) {
+    public function format($diff)
+    {
         $xi = $yi = 1;
         $block = FALSE;
         $context = array();
@@ -100,7 +102,8 @@ class DiffFormatter {
         return $end;
     }
 
-    function _block($xbeg, $xlen, $ybeg, $ylen, &$edits) {
+    protected function block($xbeg, $xlen, $ybeg, $ylen, &$edits)
+    {
         $this->_start_block($this->_block_header($xbeg, $xlen, $ybeg, $ylen));
         foreach ($edits as $edit) {
             if ($edit->type == 'copy') {
@@ -122,17 +125,18 @@ class DiffFormatter {
         $this->_end_block();
     }
 
-    function _start_diff() {
+    private function start_diff()
+    {
         ob_start();
     }
 
-    function _end_diff() {
+    private function end_diff() {
         $val = ob_get_contents();
         ob_end_clean();
         return $val;
     }
 
-    function _block_header($xbeg, $xlen, $ybeg, $ylen) {
+    private function block_header($xbeg, $xlen, $ybeg, $ylen) {
         if ($xlen > 1) {
             $xbeg .= "," . ($xbeg + $xlen - 1);
         }
@@ -143,33 +147,33 @@ class DiffFormatter {
         return $xbeg . ($xlen ? ($ylen ? 'c' : 'd') : 'a') . $ybeg;
     }
 
-    function _start_block($header) {
+    private function start_block($header) {
         if ($this->show_header) {
             echo $header . "\n";
         }
     }
 
-    function _end_block() {
+    private function end_block() {
     }
 
-    function _lines($lines, $prefix = ' ') {
+    private function lines($lines, $prefix = ' ') {
         foreach ($lines as $line) {
             echo "$prefix $line\n";
         }
     }
 
-    function _context($lines) {
+    private function context($lines) {
         $this->_lines($lines);
     }
 
-    function _added($lines) {
+    private function added($lines) {
         $this->_lines($lines, '>');
     }
-    function _deleted($lines) {
+    private function deleted($lines) {
         $this->_lines($lines, '<');
     }
 
-    function _changed($orig, $closing) {
+    private function changed($orig, $closing) {
         $this->_deleted($orig);
         echo "---\n";
         $this->_added($closing);
