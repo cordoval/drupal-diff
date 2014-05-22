@@ -63,13 +63,15 @@ class Diff
      *
      * @return int The length of the LCS.
      */
-    public function lcs() {
+    public function lcs()
+    {
         $lcs = 0;
         foreach ($this->edits as $edit) {
             if ($edit->type == 'copy') {
                 $lcs += sizeof($edit->orig);
             }
         }
+
         return $lcs;
     }
 
@@ -81,7 +83,8 @@ class Diff
      *
      * @return array The original sequence of strings.
      */
-    function orig() {
+    public function orig()
+    {
         $lines = array();
 
         foreach ($this->edits as $edit) {
@@ -89,6 +92,7 @@ class Diff
                 array_splice($lines, sizeof($lines), 0, $edit->orig);
             }
         }
+
         return $lines;
     }
 
@@ -100,7 +104,8 @@ class Diff
      *
      * @return array The sequence of strings.
      */
-    function closing() {
+    public function closing()
+    {
         $lines = array();
 
         foreach ($this->edits as $edit) {
@@ -108,6 +113,7 @@ class Diff
                 array_splice($lines, sizeof($lines), 0, $edit->closing);
             }
         }
+
         return $lines;
     }
 
@@ -116,7 +122,8 @@ class Diff
      *
      * This is here only for debugging purposes.
      */
-    function _check($from_lines, $to_lines) {
+    private function check($from_lines, $to_lines)
+    {
         if (serialize($from_lines) != serialize($this->orig())) {
             trigger_error("Reconstructed original doesn't match", E_USER_ERROR);
         }

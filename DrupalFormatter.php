@@ -7,26 +7,27 @@ namespace Drupal\Component\Diff;
  */
 class DrupalDiffFormatter extends DiffFormatter
 {
-    var $rows;
-    var $line_stats = array(
+    protected $rows;
+    protected $line_stats = array(
         'counter' => array('x' => 0, 'y' => 0),
         'offset' => array('x' => 0, 'y' => 0),
     );
 
-    function DrupalDiffFormatter() {
+    public function DrupalDiffFormatter()
+    {
         $this->leading_context_lines = Settings::get('diff_context_lines_leading', 2);
         $this->trailing_context_lines = Settings::get('diff_context_lines_trailing', 2);
     }
 
-    function _start_diff() {
+    private function start_diff() {
         $this->rows = array();
     }
 
-    function _end_diff() {
+    private function end_diff() {
         return $this->rows;
     }
 
-    function _block_header($xbeg, $xlen, $ybeg, $ylen) {
+    private function block_header($xbeg, $xlen, $ybeg, $ylen) {
         return array(
             array(
                 'data' => $xbeg + $this->line_stats['offset']['x'],
@@ -39,22 +40,22 @@ class DrupalDiffFormatter extends DiffFormatter
         );
     }
 
-    function _start_block($header) {
+    private function start_block($header) {
         if ($this->show_header) {
             $this->rows[] = $header;
         }
     }
 
-    function _end_block() {
+    private function end_block() {
     }
 
-    function _lines($lines, $prefix=' ', $color='white') {
+    private function lines($lines, $prefix=' ', $color='white') {
     }
 
     /**
      * Note: you should HTML-escape parameter before calling this.
      */
-    function addedLine($line) {
+    public function addedLine($line) {
         return array(
             array(
                 'data' => '+',
@@ -70,7 +71,7 @@ class DrupalDiffFormatter extends DiffFormatter
     /**
      * Note: you should HTML-escape parameter before calling this.
      */
-    function deletedLine($line) {
+    public function deletedLine($line) {
         return array(
             array(
                 'data' => '-',
@@ -86,7 +87,7 @@ class DrupalDiffFormatter extends DiffFormatter
     /**
      * Note: you should HTML-escape parameter before calling this.
      */
-    function contextLine($line) {
+    public function contextLine($line) {
         return array(
             '&nbsp;',
             array(
@@ -96,32 +97,32 @@ class DrupalDiffFormatter extends DiffFormatter
         );
     }
 
-    function emptyLine() {
+    public function emptyLine() {
         return array(
             '&nbsp;',
             '&nbsp;',
         );
     }
 
-    function _added($lines) {
+    private function added($lines) {
         foreach ($lines as $line) {
             $this->rows[] = array_merge($this->emptyLine(), $this->addedLine(String::checkPlain($line)));
         }
     }
 
-    function _deleted($lines) {
+    private function deleted($lines) {
         foreach ($lines as $line) {
             $this->rows[] = array_merge($this->deletedLine(String::checkPlain($line)), $this->emptyLine());
         }
     }
 
-    function _context($lines) {
+    private function context($lines) {
         foreach ($lines as $line) {
             $this->rows[] = array_merge($this->contextLine(String::checkPlain($line)), $this->contextLine(String::checkPlain($line)));
         }
     }
 
-    function _changed($orig, $closing) {
+    private function changed($orig, $closing) {
         $diff = new WordLevelDiff($orig, $closing);
         $del = $diff->orig();
         $add = $diff->closing();
