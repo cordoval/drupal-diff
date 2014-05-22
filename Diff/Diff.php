@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\Component\Diff;
+namespace Drupal\Component\Diff\Diff;
+
+use Drupal\Component\Diff\Engine;
 
 /**
  * Class representing a 'diff' between two sequences of strings.
@@ -21,7 +23,7 @@ class Diff
     {
         $eng = new Engine;
         $this->edits = $eng->diff($from_lines, $to_lines);
-        //$this->_check($from_lines, $to_lines);
+        $this->check($from_lines, $to_lines);
     }
 
     /**

@@ -1,14 +1,16 @@
 <?php
 
-namespace Drupal\Component\Diff;
+namespace Drupal\Component\Diff\Formatter;
 
+use Drupal\Component\Diff\Diff\WordLevelDiff;
+use Drupal\Component\Diff\Formatter;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Site\Settings;
 
 /**
  * Diff formatter which uses Drupal theme functions.
  */
-class DrupalDiffFormatter extends DiffFormatter
+class DrupalFormatter extends Formatter
 {
     protected $rows;
     protected $line_stats = array(
@@ -16,7 +18,7 @@ class DrupalDiffFormatter extends DiffFormatter
         'offset' => array('x' => 0, 'y' => 0),
     );
 
-    public function DrupalDiffFormatter()
+    public function __construct()
     {
         $this->leading_context_lines = Settings::get('diff_context_lines_leading', 2);
         $this->trailing_context_lines = Settings::get('diff_context_lines_trailing', 2);

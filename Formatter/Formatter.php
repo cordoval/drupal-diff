@@ -1,7 +1,6 @@
 <?php
 
-namespace Drupal\Component\Diff;
-use Drupal\Component\Diff\Op\Copy;
+namespace Drupal\Component\Diff\Formatter;
 
 /**
  * A class to format Diffs
@@ -10,7 +9,7 @@ use Drupal\Component\Diff\Op\Copy;
  * It is intended that this class be customized via inheritance,
  * to obtain fancier outputs.
  */
-class DiffFormatter
+class Formatter
 {
     /**
      * Should a block header be shown?
