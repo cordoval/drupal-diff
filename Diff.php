@@ -7,7 +7,7 @@ namespace Drupal\Component\Diff;
  */
 class Diff
 {
-    var $edits;
+    protected $edits;
 
     /**
      * Constructor.
@@ -63,7 +63,7 @@ class Diff
      *
      * @return int The length of the LCS.
      */
-    function lcs() {
+    public function lcs() {
         $lcs = 0;
         foreach ($this->edits as $edit) {
             if ($edit->type == 'copy') {

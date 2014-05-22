@@ -2,13 +2,11 @@
 
 namespace Drupal\Component\Diff\Op;
 
-use Drupal\Component\Diff\Op;
-
 class Copy extends Op
 {
-    var $type = 'copy';
+    protected $type = 'copy';
 
-    function copy($orig, $closing = FALSE) {
+    public function copy($orig, $closing = FALSE) {
         if (!is_array($closing)) {
             $closing = $orig;
         }
@@ -16,7 +14,7 @@ class Copy extends Op
         $this->closing = $closing;
     }
 
-    function reverse() {
+    public function reverse() {
         return new Copy($this->closing, $this->orig);
     }
 }

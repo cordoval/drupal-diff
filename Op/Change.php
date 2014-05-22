@@ -1,17 +1,17 @@
 <?php
 
-use Drupal\Component\Diff\Op;
+namespace Drupal\Component\Diff\Op;
 
 class Change extends Op
 {
-    var $type = 'change';
+    protected $type = 'change';
 
-    function change($orig, $closing) {
+    public function change($orig, $closing) {
         $this->orig = $orig;
         $this->closing = $closing;
     }
 
-    function reverse() {
+    public function reverse() {
         return new Change($this->closing, $this->orig);
     }
 }

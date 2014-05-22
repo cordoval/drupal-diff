@@ -2,18 +2,16 @@
 
 namespace Drupal\Component\Diff\Op;
 
-use Drupal\Component\Diff\Op;
-
 class Delete extends Op
 {
-    var $type = 'delete';
+    protected $type = 'delete';
 
-    function delete($lines) {
+    public function delete($lines) {
         $this->orig = $lines;
-        $this->closing = FALSE;
+        $this->closing = false;
     }
 
-    function reverse() {
+    public function reverse() {
         return new Add($this->orig);
     }
 }

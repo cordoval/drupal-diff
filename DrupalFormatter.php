@@ -5,8 +5,8 @@ namespace Drupal\Component\Diff;
 /**
  * Diff formatter which uses Drupal theme functions.
  */
-class DrupalDiffFormatter extends DiffFormatter {
-
+class DrupalDiffFormatter extends DiffFormatter
+{
     var $rows;
     var $line_stats = array(
         'counter' => array('x' => 0, 'y' => 0),
