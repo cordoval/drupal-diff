@@ -16,9 +16,7 @@ use Drupal\Component\Diff\Op\Add;
 use Drupal\Component\Diff\Op\Change;
 use Drupal\Component\Diff\Op\Copy;
 use Drupal\Component\Diff\Op\Delete;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Site\Settings;
 
 /**
  * Class used internally by Diff to actually compute the diffs.

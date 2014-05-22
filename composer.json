@@ -8,7 +8,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Drupal\\Component\\Diff": "core/lib/Drupal/Component/Diff"
+            "Drupal\\Component\\Diff\\": "core/lib/Drupal/Component/Diff"
         }
     },
     "config": {
