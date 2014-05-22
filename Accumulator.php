@@ -78,4 +78,3 @@ class Accumulator
         return $this->lines;
     }
 }
-
